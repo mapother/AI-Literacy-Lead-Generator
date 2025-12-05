@@ -493,4 +493,4 @@ if __name__ == "__main__":
     
     # Start with just 2-3 counties for testing
     # Remove or increase limit_counties for full run
-    generator.run(radius_miles=200, limit_counties=3)
+    generator.run(radius_miles=200, limit_counties=None)
