@@ -1,0 +1,267 @@
+"""
+LEAD GENERATOR - QUICK START GUIDE
+===================================
+
+INSTALLATION (First Time Only)
+-------------------------------
+1. Open terminal/command prompt
+2. Navigate to this directory:
+   cd /path/to/lead_generator
+
+3. Install dependencies:
+   pip install -r requirements.txt
+
+   If you get errors, try:
+   pip install --user -r requirements.txt
+
+
+RUNNING THE APPLICATION
+------------------------
+
+OPTION 1: Quick Test (Recommended First)
+   python test.py
+   
+   This runs basic checks (30 seconds)
+
+OPTION 2: Single County Test
+   python test.py --full
+   
+   This processes Frederick County only (~5 minutes)
+   Review the output before running full version
+
+OPTION 3: Limited Run (3 Counties)
+   python lead_generator.py
+   
+   Default setting processes 3 counties (~15 minutes)
+   Good for testing and verification
+
+OPTION 4: Full Run (All Counties)
+   1. Edit lead_generator.py
+   2. Find line: generator.run(radius_miles=200, limit_counties=3)
+   3. Change to: generator.run(radius_miles=200, limit_counties=None)
+   4. Run: python lead_generator.py
+   
+   Processes ~27 counties (~2-3 hours)
+
+
+CUSTOMIZATION
+-------------
+
+Edit config.py to change:
+- Search radius (default: 200 miles)
+- Request delay (default: 2 seconds)
+- Departments to search for
+- Number of results per category
+- Output filename
+
+Quick examples:
+
+# Faster scraping (more aggressive)
+REQUEST_DELAY = 1
+MAX_SEARCH_RESULTS = 10
+
+# More thorough scraping (slower)
+REQUEST_DELAY = 3
+MAX_DEPTH = 5
+MAX_SEARCH_RESULTS = 10
+
+# Process specific counties only
+SPECIFIC_COUNTIES = ['Frederick County', 'Montgomery County']
+
+
+OUTPUT FILES
+------------
+
+After running, you'll get:
+
+1. lead_generator_results.xlsx
+   - Main output with all findings
+   - Organized by county and category
+   
+2. lead_generator.log
+   - Detailed execution log
+   - Check here if something fails
+   
+3. leads_intermediate_N.xlsx (every 5 counties)
+   - Backup files in case of crashes
+   - Can resume from these if needed
+
+
+TROUBLESHOOTING
+---------------
+
+Problem: "Module not found"
+Solution: pip install -r requirements.txt
+
+Problem: "Connection timeout" 
+Solution: Edit config.py, increase PAGE_TIMEOUT to 30
+
+Problem: "Too many requests" / Getting blocked
+Solution: Edit config.py, increase REQUEST_DELAY to 3-5
+
+Problem: No results found
+Solution: Check internet connection, try at different time
+
+Problem: Program crashes mid-run
+Solution: Use intermediate files (leads_intermediate_N.xlsx)
+          Resume from the last saved point
+
+
+UNDERSTANDING THE RESULTS
+--------------------------
+
+The Excel file has these columns:
+- County: Geographic location
+- Category: Type (Gov Dept, Retirement, Hospital, etc.)
+- Entity Type: Specific type (e.g., "IT Training")
+- Entity Name: Organization name
+- Website: URL
+- Emails: Extracted email addresses (semicolon separated)
+- Contacts: Names with titles (semicolon separated)
+
+Expected data quality:
+✓ Websites: 80-90% accuracy
+✓ Organization names: 70-80% accuracy
+⚠ Emails: 30-50% hit rate (many use contact forms)
+⚠ Named contacts: 20-40% hit rate (often protected)
+
+You will need to manually verify/enhance:
+- Email addresses
+- Contact names and titles
+- Phone numbers (not extracted)
+
+
+NEXT STEPS AFTER SCRAPING
+--------------------------
+
+1. IMMEDIATE:
+   - Open the Excel file
+   - Sort by category
+   - Check for obvious errors
+   
+2. VERIFICATION (High priority leads):
+   - Visit websites directly
+   - Call to confirm contacts
+   - Use LinkedIn to find personnel
+   
+3. ENHANCEMENT:
+   - Add phone numbers manually
+   - Verify email addresses
+   - Update job titles
+   - Add notes column for outreach status
+
+4. OUTREACH:
+   - Create mail merge templates
+   - Personalize by category
+   - Track responses in CRM
+
+
+PERFORMANCE EXPECTATIONS
+-------------------------
+
+Time estimates (with default settings):
+- 1 county: ~5 minutes
+- 3 counties: ~15 minutes  
+- 10 counties: ~50 minutes
+- 27 counties: ~2.5 hours
+
+Data yield per county (approximate):
+- Government departments: 4-6 entities
+- Retirement communities: 2-3 entities
+- Hospitals: 2-3 entities
+- Chambers of commerce: 1-2 entities
+
+Email addresses per entity:
+- 0-3 emails typically
+- Government: 1-2 emails (often generic)
+- Private sector: 2-3 emails (better rate)
+
+Named contacts per entity:
+- 0-2 names typically
+- Varies greatly by website structure
+
+
+IMPORTANT REMINDERS
+-------------------
+
+✓ This tool finds PUBLIC information only
+✓ Always verify before using contacts
+✓ Respect CAN-SPAM and GDPR regulations
+✓ Be polite with scraping (use delays)
+✓ Some sites will block automated access
+✓ Manual enhancement will be necessary
+
+Do NOT:
+✗ Decrease REQUEST_DELAY below 1 second
+✗ Run multiple instances simultaneously
+✗ Use for spam or unsolicited bulk email
+✗ Assume all data is accurate
+✗ Contact people without verification
+
+
+GETTING HELP
+------------
+
+1. Check lead_generator.log for errors
+2. Review README.md for detailed info
+3. Try test.py to diagnose issues
+4. Adjust config.py settings
+5. Consider manual research for critical leads
+
+
+RECOMMENDED WORKFLOW
+--------------------
+
+Day 1:
+  ✓ Run test.py to verify setup
+  ✓ Run test.py --full for single county
+  ✓ Review output quality
+  
+Day 2:
+  ✓ Run limited version (3 counties)
+  ✓ Manually verify sample results
+  ✓ Adjust config.py if needed
+  
+Day 3:
+  ✓ Run full version (all counties)
+  ✓ Let it run for 2-3 hours
+  ✓ Review intermediate files periodically
+  
+Day 4:
+  ✓ Review complete results
+  ✓ Begin manual verification
+  ✓ Enhance high-priority leads
+  
+Day 5+:
+  ✓ Complete verification process
+  ✓ Prepare outreach campaigns
+  ✓ Track results
+
+
+ADVANCED USAGE
+--------------
+
+Import as module for custom workflows:
+
+    from lead_generator import LeadGenerator
+    
+    gen = LeadGenerator()
+    gen.delay = 3  # Custom delay
+    
+    # Process specific counties
+    counties = gen.get_counties_near_frederick(150)
+    for county in counties[:5]:
+        result = gen.process_county(county)
+        # Custom processing here
+
+
+SUPPORT
+-------
+
+No official support, but:
+- Check the logs first
+- Review README.md for details  
+- Adjust config.py settings
+- Consider professional tools for mission-critical needs
+
+Good luck with your lead generation!
